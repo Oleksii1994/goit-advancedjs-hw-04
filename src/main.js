@@ -7,4 +7,8 @@ const searchForm = document.getElementById('search-form');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 
-fetchImages();
+const handleSubmit = () => {};
+
+fetchImages()
+  .then(data => console.log(data))
+  .catch(error => console.log(error.message));
