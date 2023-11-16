@@ -21,23 +21,23 @@ const createMarkup = arrayOfImages => {
         downloads,
         tags,
       }) => `<div class="photo-card">
-    <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+    <img src="${webformatURL}" alt="${tags}" loading="lazy" width="480"/>
     <div class="info">
         <p class="info-item">
             <b>Likes</b>
-            ${likes}
+            <span>${likes}</span>
         </p>
             <p class="info-item">
         <b>Views</b>
-        ${views}
+        <span>${views}</span>
         </p>
         <p class="info-item">
             <b>Comments</b>
-            ${comments}
+            <span>${comments}</span>
         </p>
         <p class="info-item">
             <b>Downloads</b>
-            ${downloads}
+            <span>${downloads}</span>
         </p>
     </div>
 </div>`
@@ -53,15 +53,16 @@ const handleSubmit = async event => {
   try {
     const { hits } = await fetchImages(value);
     console.log(hits);
-    if (hits.length === 0) {
+    if (!hits || hits.length === 0) {
       iziToast.warning({
         message:
           'Sorry, there are no images matching your search query. Please try again.',
         position: 'topRight',
       });
     }
-
+    gallery.classList.remove('is-hidden');
     gallery.insertAdjacentHTML('beforeend', createMarkup(hits));
+    loadMoreBtn.classList.remove('is-hidden');
   } catch (error) {
     console.log(error);
   }
