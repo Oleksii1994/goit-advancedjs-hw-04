@@ -88,6 +88,7 @@ const handleSubmit = async event => {
     });
 
     loadMoreBtn.classList.remove('is-hidden');
+    event.target.elements.searchQuery.value = '';
   } catch (error) {
     console.log(error);
   }
