@@ -6,8 +6,12 @@ import 'izitoast/dist/css/iziToast.min.css';
 import { fetchImages } from './image-api';
 
 const searchForm = document.getElementById('search-form');
+const loader = document.querySelector('.loader-container');
 const gallery = document.querySelector('.gallery');
-const loadMoreBtn = document.querySelector('.load-more');
+const loadMoreBtn = document.querySelector('.load-more-wrapper');
+
+loader.classList.add('is-hidden');
+gallery.classList.add('is-hidden');
 
 const createMarkup = arrayOfImages => {
   const markup = arrayOfImages
@@ -20,27 +24,27 @@ const createMarkup = arrayOfImages => {
         comments,
         downloads,
         tags,
-      }) => `<div class="photo-card">
-    <img src="${webformatURL}" alt="${tags}" loading="lazy" width="480"/>
+      }) => `<li class="photo-card gallery__item">
+    <a class="gallery__link" href="${largeImageURL}"><img src="${webformatURL}" alt="${tags}" class="gallery__image" loading="lazy" width="380"/></a>
     <div class="info">
         <p class="info-item">
             <b>Likes</b>
-            <span>${likes}</span>
+            ${likes}
         </p>
             <p class="info-item">
         <b>Views</b>
-        <span>${views}</span>
+        ${views}
         </p>
         <p class="info-item">
             <b>Comments</b>
-            <span>${comments}</span>
+            ${comments}
         </p>
         <p class="info-item">
             <b>Downloads</b>
-            <span>${downloads}</span>
+            ${downloads}
         </p>
     </div>
-</div>`
+</li>`
     )
     .join('');
   return markup;
@@ -49,6 +53,8 @@ const createMarkup = arrayOfImages => {
 const handleSubmit = async event => {
   event.preventDefault();
   const { value } = event.currentTarget.elements.searchQuery;
+
+  loader.classList.remove('is-hidden');
 
   try {
     const { hits } = await fetchImages(value);
@@ -60,8 +66,27 @@ const handleSubmit = async event => {
         position: 'topRight',
       });
     }
+
+    loader.classList.add('is-hidden');
+
     gallery.classList.remove('is-hidden');
     gallery.insertAdjacentHTML('beforeend', createMarkup(hits));
+
+    new SimpleLightbox('.gallery__link', {
+      captionDelay: 250,
+      captionsData: 'alt',
+      scrollZoom: false,
+    });
+
+    const { height: cardHeight } = document
+      .querySelector('.gallery')
+      .firstElementChild.getBoundingClientRect();
+
+    window.scrollBy({
+      top: cardHeight / 3,
+      behavior: 'smooth',
+    });
+
     loadMoreBtn.classList.remove('is-hidden');
   } catch (error) {
     console.log(error);
