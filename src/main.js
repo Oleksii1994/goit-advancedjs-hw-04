@@ -55,20 +55,20 @@ const createMarkup = arrayOfImages => {
 };
 
 const checkIfNewSearchQuery = newValue => {
-  if (newValue === previousQueryToSearch) {
-    iziToast.warning({
-      message: 'Try to find images by another word.',
-      position: 'topRight',
-    });
-    throw new Error();
-  }
-
   if (!newValue.trim()) {
     iziToast.warning({
       message: "Sorry, search field can't be empty.",
       position: 'topRight',
     });
     loader.classList.add('is-hidden');
+    throw new Error();
+  }
+
+  if (newValue === previousQueryToSearch) {
+    iziToast.warning({
+      message: 'Try to find images by another word.',
+      position: 'topRight',
+    });
     throw new Error();
   }
 
