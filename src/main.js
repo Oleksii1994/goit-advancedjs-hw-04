@@ -10,6 +10,10 @@ const loader = document.querySelector('.loader-container');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more-wrapper');
 
+let previousQueryToSearch = '';
+let page = 1;
+let simpleLightbox = null;
+
 loader.classList.add('is-hidden');
 gallery.classList.add('is-hidden');
 
@@ -50,15 +54,43 @@ const createMarkup = arrayOfImages => {
   return markup;
 };
 
+const checkIfNewSearchQuery = newValue => {
+  if (newValue === previousQueryToSearch) {
+    iziToast.warning({
+      message: 'Try to find images by another word.',
+      position: 'topRight',
+    });
+    throw new Error();
+  }
+
+  if (!newValue.trim()) {
+    iziToast.warning({
+      message: "Sorry, search field can't be empty.",
+      position: 'topRight',
+    });
+    loader.classList.add('is-hidden');
+    throw new Error();
+  }
+
+  if (newValue !== previousQueryToSearch) {
+    previousQueryToSearch = newValue;
+    loader.classList.remove('is-hidden');
+    loadMoreBtn.classList.add('is-hidden');
+    gallery.classList.add('is-hidden');
+    gallery.innerHTML = '';
+  }
+};
+
 const handleSubmit = async event => {
   event.preventDefault();
   const { value } = event.currentTarget.elements.searchQuery;
 
-  loader.classList.remove('is-hidden');
+  checkIfNewSearchQuery(value.trim());
+  page = 1;
 
   try {
-    const { hits } = await fetchImages(value);
-    console.log(hits);
+    const { hits } = await fetchImages(value.trim(), page);
+
     if (!hits || hits.length === 0) {
       iziToast.warning({
         message:
@@ -72,7 +104,7 @@ const handleSubmit = async event => {
     gallery.classList.remove('is-hidden');
     gallery.insertAdjacentHTML('beforeend', createMarkup(hits));
 
-    new SimpleLightbox('.gallery__link', {
+    simpleLightbox = new SimpleLightbox('.gallery__link', {
       captionDelay: 250,
       captionsData: 'alt',
       scrollZoom: false,
@@ -94,7 +126,13 @@ const handleSubmit = async event => {
   }
 };
 
-const onLoadMore = async () => {};
+const onLoadMore = async () => {
+  page += 1;
+  const { hits } = await fetchImages(previousQueryToSearch, page);
+  gallery.insertAdjacentHTML('beforeend', createMarkup(hits));
+
+  simpleLightbox.refresh();
+};
 
 searchForm.addEventListener('submit', handleSubmit);
 loadMoreBtn.addEventListener('click', onLoadMore);
