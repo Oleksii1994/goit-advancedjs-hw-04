@@ -2,6 +2,10 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+AOS.init();
 
 import { fetchImages } from './image-api';
 
@@ -28,7 +32,8 @@ const createMarkup = arrayOfImages => {
         comments,
         downloads,
         tags,
-      }) => `<li class="photo-card gallery__item">
+      }) => `<li class="photo-card gallery__item" data-aos="fade-up"
+     data-aos-anchor-placement="center-bottom" data-aos-duration="1500" >
     <a class="gallery__link" href="${largeImageURL}"><img src="${webformatURL}" alt="${tags}" class="gallery__image" loading="lazy" width="380"/></a>
     <div class="info">
         <p class="info-item">
@@ -133,6 +138,21 @@ const onLoadMore = async () => {
 
   simpleLightbox.refresh();
 };
+
+function isBottomReached() {
+  const scrollTop = window.scrollY;
+  const windowHeight = window.innerHeight;
+  const documentHeight = document.documentElement.offsetHeight;
+
+  return scrollTop + windowHeight >= documentHeight - 30; // Буфер 10px
+}
+
+// Обробник події прокрутки
+window.addEventListener('scroll', function () {
+  if (isBottomReached()) {
+    onLoadMore();
+  }
+});
 
 searchForm.addEventListener('submit', handleSubmit);
 loadMoreBtn.addEventListener('click', onLoadMore);
