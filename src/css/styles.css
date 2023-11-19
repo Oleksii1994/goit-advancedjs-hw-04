@@ -107,7 +107,7 @@
   justify-content: center;
   gap: 28px;
 
-  padding: 40px 40px 0 40px;
+  padding: 40px 40px 40px 40px;
 }
 
 .photo-card {
@@ -135,24 +135,6 @@
   text-align: center;
 }
 
-.load-more-wrapper {
-  display: flex;
-  justify-content: center;
-  padding: 40px 0;
-}
-
-.load-more-btn {
-  border-radius: 4px;
-  border: none;
-
-  font-size: 16px;
-
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #ffffff;
-
-  padding: 12px 16px;
-}
-
 .is-hidden {
   display: none;
   visibility: hidden;
@@ -164,4 +146,36 @@
 
 .input-thumb {
   position: relative;
+}
+
+.up-button {
+  position: fixed;
+  bottom: 45px;
+  right: 32px;
+}
+
+.up-button__link {
+  position: relative;
+  top: -30px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  width: 45px;
+  height: 80px;
+  background-color: #00000094;
+  fill: #f539ff;
+  &:hover,
+  &:focus {
+    scale: 1.2;
+    background-color: #000000;
+    fill: #f535ff;
+    box-shadow: rgb(122, 70, 146) 2px 0px 15px;
+  }
+}
+.up-button__icon {
+  position: relative;
+  top: 20px;
+  left: 0;
 }

@@ -5,10 +5,14 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vanilla App Template</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <link rel="stylesheet" href="dist/notiflix-3.2.6.min.css" />
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
-  <body>
+  <body id="home">
     <form class="search-form" id="search-form">
       <div class="input-thumb">
         <input
@@ -22,14 +26,22 @@
       </div>
     </form>
 
-    <div class="loader-container is-hidden"><span class="loader"></span></div>
-
     <ul class="gallery is-hidden"></ul>
 
-    <div class="load-more-wrapper is-hidden">
-      <button type="button" class="load-more-btn">Load more</button>
+    <div class="loader-container is-hidden"><span class="loader"></span></div>
+
+    <div class="up-button is-hidden">
+      <a class="up-button__link" href="#home">
+        <svg
+          class="up-button__icon animate__animated animate__slideOutUp animate__slower animate__infinite"
+          width="25"
+          height="37"
+        >
+          <use href="./img/symbol-defs.svg#icon-up"></use>
+        </svg>
+      </a>
     </div>
 
-    <script type="module" src="/main.js"></script>
+    <script type="module" src="./js/main.js"></script>
   </body>
 </html>
