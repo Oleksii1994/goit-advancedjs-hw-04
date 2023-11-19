@@ -121,7 +121,7 @@ async function loadMore() {
       createInfoMessage(
         "We're sorry, but you've reached the end of search results."
       );
-      page = 1;
+
       loading = false;
       return;
     }
