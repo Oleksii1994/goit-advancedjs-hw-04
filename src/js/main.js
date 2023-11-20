@@ -79,8 +79,12 @@ async function handleSubmit(event) {
     numberOfHitsOnLoad = hits.length;
     totalNumberOfHits = totalHits;
     if (totalHits <= perPage) {
-      createInfoMessage(
-        "We're sorry, but not a lot of images was founded by this search word."
+      setTimeout(
+        () =>
+          createInfoMessage(
+            "We're sorry, but not a lot of images was founded by this search word."
+          ),
+        3000
       );
     }
 
