@@ -27,7 +27,8 @@ const perPage = 40;
 let page = 1;
 let simpleLightbox = null;
 let loading = false;
-let firstFetchedHits;
+let totalNumberOfHits;
+let numberOfHitsOnLoad = 0;
 
 loader.classList.add('is-hidden');
 gallery.classList.add('is-hidden');
@@ -56,6 +57,7 @@ function checkIfNewSearchQuery(newValue) {
 
 async function handleSubmit(event) {
   event.preventDefault();
+  numberOfHitsOnLoad = 0;
   const { value } = event.currentTarget.elements.searchQuery;
 
   page = 1;
@@ -69,13 +71,18 @@ async function handleSubmit(event) {
       createWarningMessage(
         'Sorry, there are no images matching your search query. Please try again.'
       );
-
       event.target.elements.searchQuery.value = '';
       loader.classList.add('is-hidden');
       return;
     }
 
-    firstFetchedHits = totalHits;
+    numberOfHitsOnLoad = hits.length;
+    totalNumberOfHits = totalHits;
+    if (totalHits <= perPage) {
+      createInfoMessage(
+        "We're sorry, but not a lot of images was founded by this search word."
+      );
+    }
 
     createSuccessMessage(`Hooray! We found ${totalHits} images`);
 
@@ -109,12 +116,15 @@ async function loadMore() {
   if (loading) {
     return;
   }
+
   loading = true;
   page += 1;
 
   try {
     loader.classList.remove('is-hidden');
     const { hits, totalHits } = await fetchImages(previousQueryToSearch, page);
+    numberOfHitsOnLoad += hits.length;
+
     const totalPages = Math.ceil(totalHits / perPage);
 
     if (totalPages === page) {
@@ -123,7 +133,6 @@ async function loadMore() {
       );
 
       loading = false;
-      return;
     }
 
     gallery.insertAdjacentHTML('beforeend', createMarkup(hits));
@@ -141,7 +150,8 @@ function onScrollLoadMore() {
     upBtn.classList.remove('is-hidden');
   }
 
-  if (firstFetchedHits <= perPage) {
+  if (numberOfHitsOnLoad >= totalNumberOfHits) {
+    loader.classList.add('is-hidden');
     return;
   }
 
